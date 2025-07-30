@@ -1,121 +1,78 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDy1ouy9yio3hhbKeBfu_UCgvAIOkIa7_I",
-  authDomain: "haushaltsapp-9739c.firebaseapp.com",
-  projectId: "haushaltsapp-9739c",
-  storageBucket: "haushaltsapp-9739c.firebasestorage.app",
-  messagingSenderId: "231550305736",
-  appId: "1:231550305736:web:c1eb274a090b9dfed32cfd"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const eintraegeRef = collection(db, "eintraege");
-
+let entries = JSON.parse(localStorage.getItem("entries") || "[]");
 const form = document.getElementById("entryForm");
-const entryList = document.getElementById("entryList");
-const totalSpan = document.getElementById("total");
-const showAll = document.getElementById("showAll");
+const list = document.getElementById("entries");
+const summary = document.getElementById("summary");
+const showAllCheckbox = document.getElementById("showAll");
 const exportBtn = document.getElementById("exportCSV");
 
-form.addEventListener("submit", async (e) => {
+form.addEventListener("submit", (e) => {
   e.preventDefault();
-
-  const person = document.getElementById("person").value;
   const amount = parseFloat(document.getElementById("amount").value);
   const category = document.getElementById("category").value;
   const note = document.getElementById("note").value;
+  const person = document.getElementById("person").value;
   const date = new Date().toISOString().split("T")[0];
-
   if (!amount || !category || !person) return;
 
-  await addDoc(eintraegeRef, {
-    person,
-    amount,
-    category,
-    note,
-    date,
-    timestamp: new Date()
-  });
-
+  const entry = { amount, category, note, person, date };
+  entries.push(entry);
+  localStorage.setItem("entries", JSON.stringify(entries));
   form.reset();
+  render();
 });
 
-let currentEntries = [];
-
-function render(entries) {
-  entryList.innerHTML = "";
-  const showAllMonths = showAll.checked;
-  let total = 0;
-  currentEntries = entries;
+function render() {
+  const now = new Date();
+  const currentMonth = now.toISOString().slice(0, 7);
+  const filtered = showAllCheckbox.checked
+    ? entries
+    : entries.filter(e => e.date.startsWith(currentMonth));
 
   const grouped = {};
-  entries.forEach(e => {
+  filtered.forEach(e => {
     const month = e.date.slice(0, 7);
     if (!grouped[month]) grouped[month] = [];
     grouped[month].push(e);
   });
 
-  const nowMonth = new Date().toISOString().slice(0, 7);
-
-  for (const [month, items] of Object.entries(grouped).sort().reverse()) {
-    if (!showAllMonths && month !== nowMonth) continue;
-
-    const h2 = document.createElement("h2");
-    h2.textContent = formatMonth(month);
-    entryList.appendChild(h2);
-
-    const ul = document.createElement("ul");
-    items.forEach(e => {
+  list.innerHTML = "";
+  let total = 0;
+  for (const month of Object.keys(grouped).sort().reverse()) {
+    const header = document.createElement("h2");
+    header.textContent = `🗓️ ${month}`;
+    list.appendChild(header);
+    grouped[month].forEach(e => {
+      const item = document.createElement("li");
+      item.textContent = `${e.date}: ${e.amount.toFixed(2)} € – ${e.category} (${e.note || ""}) – ${e.person}`;
+      list.appendChild(item);
       total += e.amount;
-      const li = document.createElement("li");
-      li.textContent = `${e.date}: ${e.amount.toFixed(2)} € – ${e.category} ${e.note ? "(" + e.note + ")" : ""} [${e.person}]`;
-      ul.appendChild(li);
     });
-    entryList.appendChild(ul);
   }
 
-  totalSpan.textContent = total.toFixed(2) + " €";
+  summary.innerHTML = `💸 Summe: ${total.toFixed(2)} € | Anzahl: ${filtered.length}`;
 }
-
-function formatMonth(m) {
-  const [y, mo] = m.split("-");
-  const date = new Date(y, mo - 1);
-  return date.toLocaleString("de-DE", { month: "long", year: "numeric" });
-}
-
-const q = query(eintraegeRef, orderBy("timestamp", "desc"));
-onSnapshot(q, (snapshot) => {
-  const entries = snapshot.docs.map(doc => doc.data());
-  render(entries);
-});
-
-showAll.addEventListener("change", () => {
-  render(currentEntries);
-});
 
 exportBtn.addEventListener("click", () => {
-  const showAllMonths = showAll.checked;
-  const nowMonth = new Date().toISOString().slice(0, 7);
-
-  let filtered = currentEntries;
-  if (!showAllMonths) {
-    filtered = filtered.filter(e => e.date.startsWith(nowMonth));
-  }
+  const now = new Date();
+  const currentMonth = now.toISOString().slice(0, 7);
+  const filtered = showAllCheckbox.checked
+    ? entries
+    : entries.filter(e => e.date.startsWith(currentMonth));
 
   const csv = ["Datum,Betrag (€),Kategorie,Notiz,Person"];
   filtered.forEach(e => {
-    const row = [e.date, e.amount.toFixed(2), e.category, e.note || "", e.person].map(val => `"${val}"`).join(",");
-    csv.push(row);
+    csv.push(`${e.date},${e.amount},${e.category},"${e.note}",${e.person}`);
   });
 
-  const blob = new Blob([csv.join("\n")], { type: "text/csv;charset=utf-8;" });
+  const blob = new Blob([csv.join("\n")], { type: "text/csv" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = "haushaltsausgaben.csv";
+  a.download = "haushaltsdaten.csv";
   a.click();
   URL.revokeObjectURL(url);
 });
+
+showAllCheckbox.addEventListener("change", render);
+render();

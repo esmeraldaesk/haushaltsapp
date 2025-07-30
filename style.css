@@ -33,11 +33,12 @@ h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 form {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 0.75rem;
   margin-bottom: 1.5rem;
 }
@@ -47,13 +48,14 @@ form input, form select, form button {
   font-size: 1rem;
   border-radius: 8px;
   border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 form button {
   background-color: #00c853;
   color: white;
   border: none;
-  grid-column: span 2;
   transition: background 0.3s ease;
 }
 
@@ -99,23 +101,7 @@ h2 {
   padding-bottom: 0.25rem;
 }
 
-
 @media (max-width: 480px) {
-  main {
-    padding: 1rem;
-    margin-top: 1rem;
-    border-radius: 12px;
-  }
-
-  form {
-    grid-template-columns: 1fr;
-  }
-
-  form button, #exportCSV {
-    font-size: 1.1rem;
-    padding: 1rem;
-  }
-
   h1 {
     font-size: 1.5rem;
   }
@@ -126,5 +112,10 @@ h2 {
 
   h2 {
     font-size: 1.2rem;
+  }
+
+  form button {
+    font-size: 1rem;
+    padding: 0.8rem;
   }
 }

@@ -1,0 +1,40 @@
+body {
+  font-family: sans-serif;
+  margin: 2rem;
+  background: #f4f4f4;
+}
+main {
+  max-width: 600px;
+  margin: auto;
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+}
+#summary {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+form input, form button {
+  flex: 1 1 45%;
+  padding: 0.5rem;
+}
+form button {
+  background: #0077cc;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+ul {
+  list-style: none;
+  padding: 0;
+}
+li {
+  padding: 0.5rem;
+  border-bottom: 1px solid #ccc;
+}

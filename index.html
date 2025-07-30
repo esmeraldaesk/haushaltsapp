@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>HaushaltsApp</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main>
+    <h1>Haushaltsbuch</h1>
+    <section id="summary">
+      <strong>Gesamtausgaben:</strong> <span id="total">0 €</span>
+    </section>
+
+    <form id="entryForm">
+      <input type="number" id="amount" placeholder="Betrag (€)" required />
+      <input type="text" id="category" placeholder="Kategorie" required />
+      <input type="text" id="note" placeholder="Notiz (optional)" />
+      <input type="date" id="date" required />
+      <button type="submit">Hinzufügen</button>
+    </form>
+
+    <ul id="entryList"></ul>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

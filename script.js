@@ -7,14 +7,15 @@ render();
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
+  const person = document.getElementById("person").value;
   const amount = parseFloat(document.getElementById("amount").value);
   const category = document.getElementById("category").value;
   const note = document.getElementById("note").value;
   const date = document.getElementById("date").value;
 
-  if (!amount || !category || !date) return;
+  if (!amount || !category || !date || !person) return;
 
-  const entry = { amount, category, note, date };
+  const entry = { amount, category, note, date, person };
   entries.push(entry);
   localStorage.setItem("entries", JSON.stringify(entries));
   form.reset();
@@ -27,7 +28,7 @@ function render() {
   entries.forEach((e) => {
     total += e.amount;
     const li = document.createElement("li");
-    li.textContent = `${e.date}: ${e.amount.toFixed(2)} € – ${e.category} ${e.note ? "(" + e.note + ")" : ""}`;
+    li.textContent = `${e.date}: ${e.amount.toFixed(2)} € – ${e.category} ${e.note ? "(" + e.note + ")" : ""} [${e.person}]`;
     entryList.appendChild(li);
   });
   totalSpan.textContent = total.toFixed(2) + " €";

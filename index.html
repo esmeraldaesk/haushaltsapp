@@ -2,16 +2,25 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <title>HaushaltsApp (Firebase)</title>
+  <title>HaushaltsApp (mit Monatsfilter)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
   <script type="module" src="script.js" defer></script>
+
+  <link rel="manifest" href="manifest.json">
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log("SW registered"));
+    }
+  </script>
 </head>
 <body>
   <main>
     <h1>Haushaltsbuch</h1>
     <section id="summary">
       <strong>Gesamtausgaben:</strong> <span id="total">0 €</span>
+      <label><input type="checkbox" id="showAll" /> Alle Monate anzeigen</label>
     </section>
 
     <form id="entryForm">
@@ -23,11 +32,11 @@
       <input type="number" id="amount" placeholder="Betrag (€)" required />
       <input type="text" id="category" placeholder="Kategorie" required />
       <input type="text" id="note" placeholder="Notiz (optional)" />
-      <input type="date" id="date" required />
-      <button type="submit">Hinzufügen</button>
+            <button type="submit">Hinzufügen</button>
     </form>
 
-    <ul id="entryList"></ul>
+    <button id="exportCSV">📤 CSV exportieren</button>
+    <div id="entryList"></div>
   </main>
 </body>
 </html>

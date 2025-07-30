@@ -1,40 +1,130 @@
+
 body {
-  font-family: sans-serif;
-  margin: 2rem;
-  background: #f4f4f4;
-}
-main {
-  max-width: 600px;
-  margin: auto;
-  background: white;
-  padding: 1rem;
-  border-radius: 8px;
-}
-#summary {
-  margin-bottom: 1rem;
-  font-size: 1.2rem;
-}
-form {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to bottom right, #ff85a2, #a0ffb3);
+  color: #333;
+  min-height: 100vh;
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+main {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  margin-top: 2rem;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+h1 {
+  text-align: center;
+  color: #ff4081;
+  margin-bottom: 1.5rem;
+}
+
+#summary {
+  font-size: 1.1rem;
   margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+
+form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
 form input, form select, form button {
-  flex: 1 1 45%;
-  padding: 0.5rem;
+  padding: 0.6rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
 }
+
 form button {
-  background: #0077cc;
+  background-color: #00c853;
   color: white;
   border: none;
+  grid-column: span 2;
+  transition: background 0.3s ease;
+}
+
+form button:hover {
+  background-color: #00a344;
   cursor: pointer;
 }
+
+#exportCSV {
+  background-color: #6200ea;
+  color: white;
+  border: none;
+  padding: 0.7rem 1rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  width: 100%;
+  transition: background 0.3s ease;
+}
+
+#exportCSV:hover {
+  background-color: #4b00c4;
+  cursor: pointer;
+}
+
 ul {
   list-style: none;
-  padding: 0;
+  padding-left: 0;
 }
+
 li {
   padding: 0.5rem;
-  border-bottom: 1px solid #ccc;
+  background: #f9f9f9;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  border-left: 4px solid #00c853;
+}
+
+h2 {
+  margin-top: 2rem;
+  color: #009688;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.25rem;
+}
+
+
+@media (max-width: 480px) {
+  main {
+    padding: 1rem;
+    margin-top: 1rem;
+    border-radius: 12px;
+  }
+
+  form {
+    grid-template-columns: 1fr;
+  }
+
+  form button, #exportCSV {
+    font-size: 1.1rem;
+    padding: 1rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  li {
+    font-size: 0.95rem;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
 }

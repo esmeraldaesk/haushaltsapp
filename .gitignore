@@ -1,0 +1,8 @@
+# Node / Build
+node_modules/
+dist/
+.env
+
+# Firebase config (nicht hochladen!)
+config.js
+
